@@ -7,18 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #FF6B9D;
             --secondary: #FEC260;
             --accent: #00D9FF;
+            --green: #2ecc71;
+            --orange: #e67e22;
             --dark: #1a1a2e;
-            --light: #f8f9fa;
         }
 
         body {
@@ -38,6 +35,7 @@
             margin: 0 auto;
         }
 
+        /* HEADER */
         .header {
             display: flex;
             justify-content: space-between;
@@ -50,12 +48,14 @@
             font-family: 'Bebas Neue', cursive;
             font-size: 32px;
             color: white;
-            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
             letter-spacing: 2px;
         }
 
+        .header-btns { display: flex; gap: 8px; }
+
         .edit-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
             border: 2px solid white;
             color: white;
@@ -70,17 +70,17 @@
             gap: 5px;
         }
 
-        .edit-btn:hover {
-            background: white;
-            color: var(--dark);
-            transform: translateY(-2px);
-        }
+        .edit-btn:hover { background: white; color: var(--dark); transform: translateY(-2px); }
 
+        .edit-btn.green-btn { border-color: #a8edbc; color: #a8edbc; }
+        .edit-btn.green-btn:hover { background: var(--green); border-color: var(--green); color: white; }
+
+        /* DATE/TIME */
         .date-time-section {
             background: white;
             border-radius: 14px;
             padding: 10px 18px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
@@ -88,61 +88,29 @@
             animation: fadeIn 0.8s ease-out 0.1s both;
         }
 
-        .date-info {
-            flex: 1;
-        }
+        .date-info { flex: 1; }
+        .current-date { font-family: 'Bebas Neue', cursive; font-size: 24px; color: var(--primary); letter-spacing: 1px; }
+        .week-info { font-size: 13px; color: #666; margin-top: 2px; }
+        .time-info { text-align: right; }
+        .current-time { font-size: 40px; font-weight: 700; color: var(--dark); font-family: 'Bebas Neue', cursive; letter-spacing: 2px; line-height: 1; }
 
-        .current-date {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 24px;
-            color: var(--primary);
-            letter-spacing: 1px;
-        }
-
-        .week-info {
-            font-size: 13px;
-            color: #666;
-            margin-top: 2px;
-        }
-
-        .time-info {
-            text-align: right;
-        }
-
-        .current-time {
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--dark);
-            font-family: 'Bebas Neue', cursive;
-            letter-spacing: 2px;
-            line-height: 1;
-        }
-
+        /* GRID 3 COLONNES */
         .main-content {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1fr 1.6fr 1.4fr;
             gap: 10px;
             min-height: 0;
         }
 
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .column { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
 
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
+        /* CARDS */
         .card {
             background: white;
             border-radius: 14px;
             padding: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -153,187 +121,189 @@
         .card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
         }
 
-        .card.weather { 
-            animation-delay: 0.2s;
-            flex: 0 0 auto;
-        }
-        .card.messages { 
-            animation-delay: 0.3s;
-            flex: 1;
-        }
-        .card.items { 
-            animation-delay: 0.4s;
-            flex: 1;
-        }
+        .card.weather::before  { background: linear-gradient(90deg, var(--accent), #667eea); }
+        .card.messages::before { background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+        .card.longterm::before { background: linear-gradient(90deg, var(--orange), var(--secondary)); }
+        .card.missing::before  { background: linear-gradient(90deg, var(--green), var(--accent)); }
+
+        .card.weather   { animation-delay: 0.2s; flex: 0 0 auto; }
+        .card.messages  { animation-delay: 0.3s; flex: 1; }
+        .card.longterm  { animation-delay: 0.35s; flex: 1; }
+        .card.missing   { animation-delay: 0.4s; flex: 1; }
 
         .card-title {
             font-family: 'Bebas Neue', cursive;
-            font-size: 22px;
+            font-size: 20px;
             margin-bottom: 10px;
             color: var(--dark);
             letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .card-title-icon {
-            font-size: 24px;
-        }
-
-        .card-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .card-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .card-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .card-content::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-
-        .card-content::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        .weather-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .weather-icon {
-            font-size: 42px;
+            justify-content: space-between;
             flex-shrink: 0;
         }
 
-        .weather-details {
-            flex: 1;
-        }
+        .card-title-left { display: flex; align-items: center; gap: 8px; }
+        .card-title-icon { font-size: 22px; }
 
-        .temperature {
-            font-size: 36px;
+        .card-badge {
+            font-size: 10px;
+            font-family: 'DM Sans', sans-serif;
             font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-            margin-bottom: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.4px;
+            text-transform: none;
         }
 
-        .weather-description {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 6px;
-            text-transform: capitalize;
-        }
+        .badge-supervisor { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+        .badge-all { background: #d4edda; color: #155724; border: 1px solid #28a745; }
 
-        .weather-extra {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            color: #888;
-        }
+        .card-content { flex: 1; overflow-y: auto; overflow-x: hidden; }
+        .card-content::-webkit-scrollbar { width: 5px; }
+        .card-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .card-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
 
-        .weather-extra-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        /* WEATHER */
+        .weather-container { display: flex; align-items: center; gap: 12px; }
+        .weather-icon { font-size: 42px; flex-shrink: 0; }
+        .weather-details { flex: 1; }
+        .temperature { font-size: 36px; font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 4px; }
+        .weather-description { font-size: 14px; color: #666; margin-bottom: 6px; text-transform: capitalize; }
+        .weather-extra { display: flex; gap: 12px; font-size: 12px; color: #888; }
+        .weather-extra-item { display: flex; align-items: center; gap: 4px; }
 
-        .message-item, .item-item {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        /* LIST ITEMS */
+        .message-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             padding: 10px 14px;
             border-radius: 10px;
             margin-bottom: 8px;
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--primary);
             font-size: 15px;
             line-height: 1.4;
             transition: all 0.3s;
         }
 
-        .message-item:hover, .item-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #aaa;
-            font-size: 16px;
-            padding: 30px 15px;
-            font-style: italic;
-        }
-
-        .loading {
-            text-align: center;
-            color: #999;
+        .longterm-item {
+            background: linear-gradient(135deg, #fff8f0, #fdebd0);
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--orange);
             font-size: 14px;
-            padding: 20px;
+            line-height: 1.4;
+            transition: all 0.3s;
         }
 
+        .missing-item {
+            background: linear-gradient(135deg, #f0fff4, #d4edda);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin-bottom: 7px;
+            border-left: 4px solid var(--green);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .missing-item-text { flex: 1; }
+
+        .btn-done {
+            background: none;
+            border: 1.5px solid var(--green);
+            color: var(--green);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-done:hover { background: var(--green); color: white; }
+
+        .message-item:hover, .longterm-item:hover, .missing-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* QUICK ADD */
+        .quick-add-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+
+        .quick-add-bar input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .quick-add-bar input:focus { outline: none; border-color: var(--green); }
+
+        .quick-add-bar button {
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .quick-add-bar button:hover { background: #27ae60; }
+
+        .empty-state { text-align: center; color: #aaa; font-size: 15px; padding: 25px 15px; font-style: italic; }
+        .loading { text-align: center; color: #999; font-size: 14px; padding: 20px; }
+
+        /* MODALS */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(5px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: white;
             border-radius: 20px;
             padding: 35px;
-            max-width: 700px;
+            max-width: 680px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
-        .modal-title {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: var(--dark);
-            letter-spacing: 1px;
-        }
+        .modal-title { font-family: 'Bebas Neue', cursive; font-size: 30px; margin-bottom: 5px; color: var(--dark); letter-spacing: 1px; }
+        .modal-subtitle { font-size: 13px; color: #888; margin-bottom: 22px; }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            color: var(--dark);
-        }
+        .form-group { margin-bottom: 20px; }
+        .form-label { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark); }
 
         .form-input, .form-textarea {
             width: 100%;
@@ -345,31 +315,12 @@
             transition: all 0.3s;
         }
 
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--primary); }
+        .form-textarea { min-height: 110px; resize: vertical; }
 
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .item-list-editor {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .item-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .item-row input {
-            flex: 1;
-        }
+        .item-list-editor { display: flex; flex-direction: column; gap: 8px; }
+        .item-row { display: flex; gap: 8px; align-items: center; }
+        .item-row input { flex: 1; }
 
         .btn-remove {
             background: #e74c3c;
@@ -378,499 +329,557 @@
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
+            font-size: 13px;
             font-weight: 600;
             transition: all 0.3s;
-            font-size: 13px;
         }
 
-        .btn-remove:hover {
-            background: #c0392b;
-        }
+        .btn-remove:hover { background: #c0392b; }
 
         .btn-add {
             background: #2ecc71;
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 9px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             margin-top: 8px;
             transition: all 0.3s;
         }
 
-        .btn-add:hover {
-            background: #27ae60;
-        }
+        .btn-add:hover { background: #27ae60; }
 
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 25px;
-        }
+        .modal-actions { display: flex; gap: 12px; margin-top: 25px; }
 
         .btn-save, .btn-cancel {
             flex: 1;
             padding: 12px;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .btn-save {
-            background: var(--primary);
-            color: white;
+        .btn-save { background: var(--primary); color: white; }
+        .btn-save:hover { background: #ff5085; transform: translateY(-2px); }
+        .btn-cancel { background: #6c757d; color: white; }
+        .btn-cancel:hover { background: #5a6268; }
+
+        /* PIN MODAL */
+        .pin-modal-content { max-width: 360px; text-align: center; }
+
+        .pin-input {
+            font-size: 28px;
+            letter-spacing: 12px;
+            text-align: center;
+            font-weight: 700;
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-family: 'DM Sans', sans-serif;
         }
 
-        .btn-save:hover {
-            background: #ff5085;
-            transform: translateY(-2px);
-        }
+        .pin-input:focus { outline: none; border-color: var(--primary); }
 
-        .btn-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-cancel:hover {
-            background: #5a6268;
-        }
+        .pin-error { color: #e74c3c; font-size: 13px; margin-bottom: 12px; display: none; }
+        .pin-error.show { display: block; }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .shake { animation: shake 0.4s ease; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🍦 CRÈME ET CIE 🍦</div>
-            <button class="edit-btn" id="editButton">
-                <span>✏️</span>
-                <span>Modifier</span>
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">🍦 CRÈME ET CIE 🍦</div>
+        <div class="header-btns">
+            <button class="edit-btn green-btn" id="editMissingBtn">
+                <span>✏️</span><span>Items Manquants</span>
+            </button>
+            <button class="edit-btn" id="editSupervisorBtn">
+                <span>🔐</span><span>Superviseur</span>
             </button>
         </div>
+    </div>
 
-        <div class="date-time-section">
-            <div class="date-info">
-                <div class="current-date" id="currentDate"></div>
-                <div class="week-info" id="weekInfo"></div>
-            </div>
-            <div class="time-info">
-                <div class="current-time" id="currentTime"></div>
-            </div>
+    <!-- DATE / HEURE -->
+    <div class="date-time-section">
+        <div class="date-info">
+            <div class="current-date" id="currentDate"></div>
+            <div class="week-info" id="weekInfo"></div>
         </div>
+        <div class="time-info">
+            <div class="current-time" id="currentTime"></div>
+        </div>
+    </div>
 
-        <div class="main-content">
-            <div class="left-column">
-                <div class="card weather">
-                    <div class="card-title">
+    <!-- CONTENU PRINCIPAL -->
+    <div class="main-content">
+
+        <!-- COL 1 : Météo + Items Manquants -->
+        <div class="column">
+            <div class="card weather">
+                <div class="card-title">
+                    <div class="card-title-left">
                         <span class="card-title-icon">🌤️</span>
                         <span>Météo</span>
                     </div>
-                    <div id="weatherContent" class="loading">Chargement...</div>
                 </div>
+                <div id="weatherContent" class="loading">Chargement...</div>
+            </div>
 
-                <div class="card items">
-                    <div class="card-title">
-                        <span class="card-title-icon">📦</span>
+            <div class="card missing">
+                <div class="card-title">
+                    <div class="card-title-left">
+                        <span class="card-title-icon">🛒</span>
                         <span>Items Manquants</span>
                     </div>
-                    <div class="card-content" id="itemsContent"></div>
+                    <span class="card-badge badge-all">Tous peuvent modifier</span>
+                </div>
+                <div class="card-content" id="missingContent"></div>
+                <div class="quick-add-bar">
+                    <input type="text" id="quickAddInput" placeholder="Ajouter un item..." maxlength="80">
+                    <button id="quickAddBtn">+ Ajouter</button>
                 </div>
             </div>
+        </div>
 
-            <div class="right-column">
-                <div class="card messages">
-                    <div class="card-title">
+        <!-- COL 2 : Message de la semaine -->
+        <div class="column">
+            <div class="card messages">
+                <div class="card-title">
+                    <div class="card-title-left">
                         <span class="card-title-icon">📢</span>
-                        <span>Messages Importants</span>
+                        <span>Message de la Semaine</span>
                     </div>
-                    <div class="card-content" id="messagesContent"></div>
+                    <span class="card-badge badge-supervisor">🔐 Superviseur</span>
                 </div>
+                <div class="card-content" id="messagesContent"></div>
             </div>
         </div>
-    </div>
 
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <div class="modal-title">✏️ Modifier le Tableau</div>
-            
-            <div class="form-group">
-                <label class="form-label">📢 Messages Importants</label>
-                <textarea class="form-textarea" id="editMessages" placeholder="Un message par ligne"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">📦 Items Manquants</label>
-                <div id="itemsEditor" class="item-list-editor"></div>
-                <button class="btn-add" id="addItemButton">+ Ajouter un item</button>
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-save" id="saveButton">✓ Sauvegarder</button>
-                <button class="btn-cancel" id="cancelButton">✕ Annuler</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        (function() {
-            const { createClient } = supabase;
-            
-            const SUPABASE_URL = 'https://fzquuwtnfwkvolowiypj.supabase.co';
-            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6cXV1d3RuZndrdm9sb3dpeXBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NjM2NTgsImV4cCI6MjA4NjIzOTY1OH0.qQrgyJN-WA52B2WZZzs0yNbQQfLkD6f961rBcVv_kyY';
-            
-            const client = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-            let CONFIG = {
-                location: {
-                    city: 'Ottawa',
-                    lat: 45.4215,
-                    lon: -75.6972
-                },
-                messages: [],
-                missingItems: []
-            };
-
-            async function loadConfig() {
-                try {
-                    const { data: messagesData, error: messagesError } = await client
-                        .from('board_messages')
-                        .select('*')
-                        .order('ordre', { ascending: true });
-                    
-                    if (messagesError) throw messagesError;
-                    
-                    CONFIG.messages = messagesData.map(item => item.texte);
-                    
-                    const { data: itemsData, error: itemsError } = await client
-                        .from('board_items')
-                        .select('*')
-                        .order('ordre', { ascending: true });
-                    
-                    if (itemsError) throw itemsError;
-                    
-                    CONFIG.missingItems = itemsData.map(item => item.texte);
-                    
-                    displayMessages();
-                    displayMissingItems();
-                } catch (error) {
-                    console.error('Erreur chargement config:', error);
-                    CONFIG.messages = ["Bienvenue! 😊", "Réunion vendredi 14h"];
-                    CONFIG.missingItems = ["Lait 2%", "Serviettes"];
-                    displayMessages();
-                    displayMissingItems();
-                }
-            }
-
-            async function saveMessages(messages) {
-                try {
-                    await client.from('board_messages').delete().neq('id', 0);
-                    
-                    const messagesData = messages.map((texte, index) => ({
-                        texte: texte,
-                        ordre: index + 1
-                    }));
-                    
-                    const { error } = await client
-                        .from('board_messages')
-                        .insert(messagesData);
-                    
-                    if (error) throw error;
-                    
-                    await loadConfig();
-                    return true;
-                } catch (error) {
-                    console.error('Erreur sauvegarde messages:', error);
-                    alert('Erreur lors de la sauvegarde des messages');
-                    return false;
-                }
-            }
-
-            async function saveItems(items) {
-                try {
-                    await client.from('board_items').delete().neq('id', 0);
-                    
-                    const itemsData = items.map((texte, index) => ({
-                        texte: texte,
-                        ordre: index + 1
-                    }));
-                    
-                    const { error } = await client
-                        .from('board_items')
-                        .insert(itemsData);
-                    
-                    if (error) throw error;
-                    
-                    await loadConfig();
-                    return true;
-                } catch (error) {
-                    console.error('Erreur sauvegarde items:', error);
-                    alert('Erreur lors de la sauvegarde des items');
-                    return false;
-                }
-            }
-
-            function setupRealtimeSubscriptions() {
-                client
-                    .channel('board_messages_changes')
-                    .on('postgres_changes', { 
-                        event: '*', 
-                        schema: 'public', 
-                        table: 'board_messages' 
-                    }, () => {
-                        loadConfig();
-                    })
-                    .subscribe();
-                
-                client
-                    .channel('board_items_changes')
-                    .on('postgres_changes', { 
-                        event: '*', 
-                        schema: 'public', 
-                        table: 'board_items' 
-                    }, () => {
-                        loadConfig();
-                    })
-                    .subscribe();
-            }
-
-            function updateDateTime() {
-                const now = new Date();
-                
-                const options = { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                };
-                document.getElementById('currentDate').textContent = 
-                    now.toLocaleDateString('fr-CA', options);
-                
-                const timeString = now.toLocaleTimeString('fr-CA', { 
-                    hour: '2-digit', 
-                    minute: '2-digit'
-                });
-                document.getElementById('currentTime').textContent = timeString;
-                
-                const weekNumber = getWeekNumber(now);
-                const weekStart = getWeekDates(now);
-                document.getElementById('weekInfo').textContent = 
-                    `Semaine ${weekNumber} | ${weekStart.start} au ${weekStart.end}`;
-            }
-
-            function getWeekNumber(date) {
-                const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-                const dayNum = d.getUTCDay() || 7;
-                d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-                const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-                return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-            }
-
-            function getWeekDates(date) {
-                const curr = new Date(date);
-                const first = curr.getDate() - curr.getDay();
-                const last = first + 6;
-                
-                const firstDay = new Date(curr.setDate(first));
-                const lastDay = new Date(curr.setDate(last));
-                
-                const options = { month: 'short', day: 'numeric' };
-                
-                return {
-                    start: firstDay.toLocaleDateString('fr-CA', options),
-                    end: lastDay.toLocaleDateString('fr-CA', options)
-                };
-            }
-
-            async function updateWeather() {
-                try {
-                    const response = await fetch(
-                        `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.location.lat}&longitude=${CONFIG.location.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
-                    );
-                    
-                    const data = await response.json();
-                    const current = data.current;
-                    
-                    const weatherIcons = {
-                        0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
-                        45: '🌫️', 48: '🌫️',
-                        51: '🌧️', 53: '🌧️', 55: '🌧️',
-                        61: '🌧️', 63: '🌧️', 65: '🌧️',
-                        71: '🌨️', 73: '🌨️', 75: '🌨️',
-                        80: '🌦️', 81: '🌦️', 82: '🌦️',
-                        95: '⛈️', 96: '⛈️', 99: '⛈️'
-                    };
-                    
-                    const weatherDescriptions = {
-                        0: 'Ensoleillé', 1: 'Plutôt ensoleillé', 2: 'Partiellement nuageux', 
-                        3: 'Nuageux', 45: 'Brouillard', 48: 'Brouillard givrant',
-                        51: 'Bruine légère', 53: 'Bruine modérée', 55: 'Bruine dense',
-                        61: 'Pluie légère', 63: 'Pluie modérée', 65: 'Pluie forte',
-                        71: 'Neige légère', 73: 'Neige modérée', 75: 'Neige forte',
-                        80: 'Averses légères', 81: 'Averses modérées', 82: 'Averses fortes',
-                        95: 'Orage', 96: 'Orage avec grêle', 99: 'Orage violent'
-                    };
-                    
-                    const icon = weatherIcons[current.weather_code] || '🌡️';
-                    const description = weatherDescriptions[current.weather_code] || 'Conditions variables';
-                    
-                    document.getElementById('weatherContent').innerHTML = `
-                        <div class="weather-container">
-                            <div class="weather-icon">${icon}</div>
-                            <div class="weather-details">
-                                <div class="temperature">${Math.round(current.temperature_2m)}°C</div>
-                                <div class="weather-description">${description}</div>
-                                <div class="weather-extra">
-                                    <div class="weather-extra-item">
-                                        <span>💧</span>
-                                        <span>${current.relative_humidity_2m}%</span>
-                                    </div>
-                                    <div class="weather-extra-item">
-                                        <span>💨</span>
-                                        <span>${Math.round(current.wind_speed_10m)} km/h</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } catch (error) {
-                    console.error('Erreur météo:', error);
-                    document.getElementById('weatherContent').innerHTML = 
-                        '<div class="empty-state">Impossible de charger la météo</div>';
-                }
-            }
-
-            function displayMessages() {
-                const container = document.getElementById('messagesContent');
-                
-                if (CONFIG.messages.length === 0) {
-                    container.innerHTML = '<div class="empty-state">Aucun message</div>';
-                    return;
-                }
-                
-                container.innerHTML = CONFIG.messages.map(msg => 
-                    `<div class="message-item">${msg}</div>`
-                ).join('');
-            }
-
-            function displayMissingItems() {
-                const container = document.getElementById('itemsContent');
-                
-                if (CONFIG.missingItems.length === 0) {
-                    container.innerHTML = '<div class="empty-state">Tout en stock! ✓</div>';
-                    return;
-                }
-                
-                container.innerHTML = CONFIG.missingItems.map(item => 
-                    `<div class="item-item">❌ ${item}</div>`
-                ).join('');
-            }
-
-            function openEditModal() {
-                document.getElementById('editMessages').value = CONFIG.messages.join('\n');
-                renderItemsEditor();
-                document.getElementById('editModal').classList.add('active');
-            }
-
-            function closeEditModal() {
-                document.getElementById('editModal').classList.remove('active');
-            }
-
-            function renderItemsEditor() {
-                const container = document.getElementById('itemsEditor');
-                container.innerHTML = CONFIG.missingItems.map((item, index) => `
-                    <div class="item-row">
-                        <input type="text" class="form-input" value="${item}" data-index="${index}">
-                        <button class="btn-remove" data-index="${index}">🗑️</button>
+        <!-- COL 3 : Items manquants long terme -->
+        <div class="column">
+            <div class="card longterm">
+                <div class="card-title">
+                    <div class="card-title-left">
+                        <span class="card-title-icon">📋</span>
+                        <span>Manquants Long Terme</span>
                     </div>
-                `).join('');
-                
-                document.querySelectorAll('.btn-remove').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const index = parseInt(this.getAttribute('data-index'));
-                        removeItem(index);
-                    });
-                });
-            }
+                    <span class="card-badge badge-supervisor">🔐 Superviseur</span>
+                </div>
+                <div class="card-content" id="longtermContent"></div>
+            </div>
+        </div>
 
-            function addItemRow() {
-                CONFIG.missingItems.push('');
-                renderItemsEditor();
-            }
+    </div>
+</div>
 
-            function removeItem(index) {
-                CONFIG.missingItems.splice(index, 1);
-                renderItemsEditor();
-            }
+<!-- MODAL PIN -->
+<div class="modal" id="pinModal">
+    <div class="modal-content pin-modal-content">
+        <div class="modal-title">🔐 Code Superviseur</div>
+        <p class="modal-subtitle">Entrez le code PIN pour continuer</p>
+        <input type="password" class="pin-input" id="pinInput" placeholder="••••" maxlength="4" inputmode="numeric">
+        <div class="pin-error" id="pinError">❌ Code incorrect. Réessayez.</div>
+        <div class="modal-actions">
+            <button class="btn-save" id="pinValidateBtn">✓ Valider</button>
+            <button class="btn-cancel" id="pinCancelBtn">✕ Annuler</button>
+        </div>
+    </div>
+</div>
 
-            async function saveChanges() {
-                const messagesText = document.getElementById('editMessages').value;
-                const messages = messagesText.split('\n').filter(line => line.trim() !== '');
-                
-                const itemInputs = document.querySelectorAll('#itemsEditor input');
-                const items = Array.from(itemInputs)
-                    .map(input => input.value.trim())
-                    .filter(item => item !== '');
-                
-                const messagesOk = await saveMessages(messages);
-                const itemsOk = await saveItems(items);
-                
-                if (messagesOk && itemsOk) {
-                    closeEditModal();
-                }
-            }
+<!-- MODAL SUPERVISEUR -->
+<div class="modal" id="supervisorModal">
+    <div class="modal-content">
+        <div class="modal-title">✏️ Modifier — Superviseur</div>
+        <p class="modal-subtitle">Ces informations sont visibles par tous les employés sur le tableau.</p>
 
-            async function init() {
-                updateDateTime();
-                updateWeather();
-                await loadConfig();
-                setupRealtimeSubscriptions();
-                
-                document.getElementById('editButton').addEventListener('click', openEditModal);
-                document.getElementById('cancelButton').addEventListener('click', closeEditModal);
-                document.getElementById('saveButton').addEventListener('click', saveChanges);
-                document.getElementById('addItemButton').addEventListener('click', addItemRow);
-                
-                document.getElementById('editModal').addEventListener('click', function(e) {
-                    if (e.target.id === 'editModal') {
-                        closeEditModal();
-                    }
-                });
-                
-                setInterval(updateDateTime, 1000);
-                setInterval(updateWeather, 10 * 60 * 1000);
-            }
+        <div class="form-group">
+            <label class="form-label">📢 Message de la Semaine</label>
+            <textarea class="form-textarea" id="editMessages" placeholder="Un message par ligne&#10;Ex: Réunion vendredi 14h&#10;Ex: Attention stock bas!"></textarea>
+        </div>
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
+        <div class="form-group">
+            <label class="form-label">📋 Items Manquants Long Terme</label>
+            <div id="longtermEditor" class="item-list-editor"></div>
+            <button class="btn-add" id="addLongtermBtn">+ Ajouter un item</button>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-save" id="saveSupervisorBtn">✓ Sauvegarder</button>
+            <button class="btn-cancel" id="cancelSupervisorBtn">✕ Annuler</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ITEMS MANQUANTS -->
+<div class="modal" id="missingModal">
+    <div class="modal-content">
+        <div class="modal-title">🛒 Gérer les Items Manquants</div>
+        <p class="modal-subtitle">Tout le monde peut modifier cette liste.</p>
+
+        <div class="form-group">
+            <div id="missingEditor" class="item-list-editor"></div>
+            <button class="btn-add" id="addMissingEditorBtn">+ Ajouter un item</button>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-save" id="saveMissingBtn">✓ Sauvegarder</button>
+            <button class="btn-cancel" id="cancelMissingBtn">✕ Annuler</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const { createClient } = supabase;
+
+    const SUPABASE_URL = 'https://fzquuwtnfwkvolowiypj.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6cXV1d3RuZndrdm9sb3dpeXBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NjM2NTgsImV4cCI6MjA4NjIzOTY1OH0.qQrgyJN-WA52B2WZZzs0yNbQQfLkD6f961rBcVv_kyY';
+    const SUPERVISOR_CODE = '1234';
+
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let DATA = {
+        location: { lat: 45.4215, lon: -75.6972 },
+        messages: [],
+        longtermItems: [],
+        missingItems: []
+    };
+
+    let pinCallback = null;
+
+    // ========== SUPABASE ==========
+
+    async function loadAll() {
+        try {
+            const [msgRes, ltRes, misRes] = await Promise.all([
+                db.from('board_messages').select('*').order('ordre', { ascending: true }),
+                db.from('board_longterm').select('*').order('ordre', { ascending: true }),
+                db.from('board_items').select('*').order('ordre', { ascending: true })
+            ]);
+            DATA.messages      = (msgRes.data || []).map(r => r.texte);
+            DATA.longtermItems = (ltRes.data  || []).map(r => r.texte);
+            DATA.missingItems  = (misRes.data || []).map(r => r.texte);
+        } catch (e) {
+            console.error('loadAll error:', e);
+        }
+        renderAll();
+    }
+
+    async function saveTable(table, items) {
+        try {
+            await db.from(table).delete().neq('id', 0);
+            if (items.length > 0) {
+                const { error } = await db.from(table).insert(items.map((texte, i) => ({ texte, ordre: i + 1 })));
+                if (error) throw error;
             }
-        })();
-    </script>
+            await loadAll();
+            return true;
+        } catch (e) {
+            console.error(`save ${table} error:`, e);
+            alert('Erreur lors de la sauvegarde. Vérifiez la table "' + table + '" dans Supabase.');
+            return false;
+        }
+    }
+
+    function setupRealtime() {
+        ['board_messages', 'board_longterm', 'board_items'].forEach(table => {
+            db.channel(`${table}_rt`)
+                .on('postgres_changes', { event: '*', schema: 'public', table }, loadAll)
+                .subscribe();
+        });
+    }
+
+    // ========== RENDER ==========
+
+    function renderAll() {
+        renderMessages();
+        renderLongterm();
+        renderMissing();
+    }
+
+    function renderMessages() {
+        const c = document.getElementById('messagesContent');
+        c.innerHTML = DATA.messages.length === 0
+            ? '<div class="empty-state">Aucun message cette semaine</div>'
+            : DATA.messages.map(m => `<div class="message-item">${m}</div>`).join('');
+    }
+
+    function renderLongterm() {
+        const c = document.getElementById('longtermContent');
+        c.innerHTML = DATA.longtermItems.length === 0
+            ? '<div class="empty-state">Aucun item long terme</div>'
+            : DATA.longtermItems.map(item => `<div class="longterm-item">⏳ ${item}</div>`).join('');
+    }
+
+    function renderMissing() {
+        const c = document.getElementById('missingContent');
+        c.innerHTML = DATA.missingItems.length === 0
+            ? '<div class="empty-state">Tout en stock! ✓</div>'
+            : DATA.missingItems.map((item, i) => `
+                <div class="missing-item">
+                    <span class="missing-item-text">❌ ${item}</span>
+                    <button class="btn-done" data-index="${i}">✓ Reçu</button>
+                </div>`).join('');
+
+        document.querySelectorAll('.btn-done').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                DATA.missingItems.splice(parseInt(this.dataset.index), 1);
+                await saveTable('board_items', DATA.missingItems);
+            });
+        });
+    }
+
+    // ========== QUICK ADD ==========
+
+    async function quickAdd() {
+        const input = document.getElementById('quickAddInput');
+        const val = input.value.trim();
+        if (!val) return;
+        DATA.missingItems.push(val);
+        input.value = '';
+        await saveTable('board_items', DATA.missingItems);
+    }
+
+    document.getElementById('quickAddBtn').addEventListener('click', quickAdd);
+    document.getElementById('quickAddInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') quickAdd();
+    });
+
+    // ========== PIN ==========
+
+    function askPin(callback) {
+        pinCallback = callback;
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinError').classList.remove('show');
+        document.getElementById('pinModal').classList.add('active');
+        setTimeout(() => document.getElementById('pinInput').focus(), 150);
+    }
+
+    function validatePin() {
+        if (document.getElementById('pinInput').value === SUPERVISOR_CODE) {
+            document.getElementById('pinModal').classList.remove('active');
+            if (pinCallback) { pinCallback(); pinCallback = null; }
+        } else {
+            document.getElementById('pinError').classList.add('show');
+            const inp = document.getElementById('pinInput');
+            inp.value = '';
+            inp.classList.add('shake');
+            setTimeout(() => inp.classList.remove('shake'), 400);
+            inp.focus();
+        }
+    }
+
+    document.getElementById('pinValidateBtn').addEventListener('click', validatePin);
+    document.getElementById('pinCancelBtn').addEventListener('click', () => {
+        document.getElementById('pinModal').classList.remove('active');
+        pinCallback = null;
+    });
+    document.getElementById('pinInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') validatePin();
+    });
+
+    // ========== MODAL SUPERVISEUR ==========
+
+    function openSupervisorModal() {
+        document.getElementById('editMessages').value = DATA.messages.join('\n');
+        renderLongtermEditor();
+        document.getElementById('supervisorModal').classList.add('active');
+    }
+
+    function closeSupervisorModal() {
+        document.getElementById('supervisorModal').classList.remove('active');
+    }
+
+    function renderLongtermEditor() {
+        const c = document.getElementById('longtermEditor');
+        c.innerHTML = DATA.longtermItems.map((item, i) => `
+            <div class="item-row">
+                <input type="text" class="form-input" value="${item}" data-lt="${i}">
+                <button class="btn-remove" data-lt="${i}">🗑️</button>
+            </div>`).join('');
+        c.querySelectorAll('.btn-remove').forEach(btn => {
+            btn.addEventListener('click', function() {
+                DATA.longtermItems.splice(parseInt(this.dataset.lt), 1);
+                renderLongtermEditor();
+            });
+        });
+    }
+
+    async function saveSupervisor() {
+        const messages = document.getElementById('editMessages').value
+            .split('\n').map(l => l.trim()).filter(l => l);
+        const ltItems = Array.from(document.querySelectorAll('#longtermEditor input'))
+            .map(i => i.value.trim()).filter(v => v);
+
+        const ok1 = await saveTable('board_messages', messages);
+        const ok2 = await saveTable('board_longterm', ltItems);
+        if (ok1 && ok2) closeSupervisorModal();
+    }
+
+    document.getElementById('editSupervisorBtn').addEventListener('click', () => askPin(openSupervisorModal));
+    document.getElementById('saveSupervisorBtn').addEventListener('click', saveSupervisor);
+    document.getElementById('cancelSupervisorBtn').addEventListener('click', closeSupervisorModal);
+    document.getElementById('addLongtermBtn').addEventListener('click', () => {
+        DATA.longtermItems.push('');
+        renderLongtermEditor();
+        const inputs = document.querySelectorAll('#longtermEditor input');
+        if (inputs.length) inputs[inputs.length - 1].focus();
+    });
+    document.getElementById('supervisorModal').addEventListener('click', e => {
+        if (e.target.id === 'supervisorModal') closeSupervisorModal();
+    });
+
+    // ========== MODAL ITEMS MANQUANTS ==========
+
+    function openMissingModal() {
+        renderMissingEditor();
+        document.getElementById('missingModal').classList.add('active');
+    }
+
+    function closeMissingModal() {
+        document.getElementById('missingModal').classList.remove('active');
+    }
+
+    function renderMissingEditor() {
+        const c = document.getElementById('missingEditor');
+        c.innerHTML = DATA.missingItems.length === 0
+            ? '<div style="color:#aaa;font-style:italic;font-size:13px;padding:8px 0;">Aucun item pour le moment</div>'
+            : DATA.missingItems.map((item, i) => `
+                <div class="item-row">
+                    <input type="text" class="form-input" value="${item}" data-mis="${i}">
+                    <button class="btn-remove" data-mis="${i}">🗑️</button>
+                </div>`).join('');
+        c.querySelectorAll('.btn-remove').forEach(btn => {
+            btn.addEventListener('click', function() {
+                DATA.missingItems.splice(parseInt(this.dataset.mis), 1);
+                renderMissingEditor();
+            });
+        });
+    }
+
+    async function saveMissing() {
+        const items = Array.from(document.querySelectorAll('#missingEditor input'))
+            .map(i => i.value.trim()).filter(v => v);
+        const ok = await saveTable('board_items', items);
+        if (ok) closeMissingModal();
+    }
+
+    document.getElementById('editMissingBtn').addEventListener('click', openMissingModal);
+    document.getElementById('saveMissingBtn').addEventListener('click', saveMissing);
+    document.getElementById('cancelMissingBtn').addEventListener('click', closeMissingModal);
+    document.getElementById('addMissingEditorBtn').addEventListener('click', () => {
+        DATA.missingItems.push('');
+        renderMissingEditor();
+        const inputs = document.querySelectorAll('#missingEditor input');
+        if (inputs.length) inputs[inputs.length - 1].focus();
+    });
+    document.getElementById('missingModal').addEventListener('click', e => {
+        if (e.target.id === 'missingModal') closeMissingModal();
+    });
+
+    // ========== DATE / HEURE ==========
+
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('currentDate').textContent =
+            now.toLocaleDateString('fr-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('currentTime').textContent =
+            now.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit' });
+
+        const wn = getWeekNumber(now);
+        const { start, end } = getWeekDates(now);
+        document.getElementById('weekInfo').textContent = `Semaine ${wn} | ${start} au ${end}`;
+    }
+
+    function getWeekNumber(d) {
+        const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        const day = date.getUTCDay() || 7;
+        date.setUTCDate(date.getUTCDate() + 4 - day);
+        const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+        return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function getWeekDates(d) {
+        const curr = new Date(d);
+        const first = curr.getDate() - curr.getDay();
+        const opts = { month: 'short', day: 'numeric' };
+        return {
+            start: new Date(new Date(curr).setDate(first)).toLocaleDateString('fr-CA', opts),
+            end:   new Date(new Date(curr).setDate(first + 6)).toLocaleDateString('fr-CA', opts)
+        };
+    }
+
+    // ========== MÉTÉO ==========
+
+    async function updateWeather() {
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${DATA.location.lat}&longitude=${DATA.location.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`);
+            const data = await res.json();
+            const c = data.current;
+
+            const icons = {0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌧️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',75:'🌨️',80:'🌦️',81:'🌦️',82:'🌦️',95:'⛈️',96:'⛈️',99:'⛈️'};
+            const descs = {0:'Ensoleillé',1:'Plutôt ensoleillé',2:'Partiellement nuageux',3:'Nuageux',45:'Brouillard',48:'Brouillard givrant',51:'Bruine légère',53:'Bruine modérée',55:'Bruine dense',61:'Pluie légère',63:'Pluie modérée',65:'Pluie forte',71:'Neige légère',73:'Neige modérée',75:'Neige forte',80:'Averses légères',81:'Averses modérées',82:'Averses fortes',95:'Orage',96:'Orage avec grêle',99:'Orage violent'};
+
+            document.getElementById('weatherContent').innerHTML = `
+                <div class="weather-container">
+                    <div class="weather-icon">${icons[c.weather_code] || '🌡️'}</div>
+                    <div class="weather-details">
+                        <div class="temperature">${Math.round(c.temperature_2m)}°C</div>
+                        <div class="weather-description">${descs[c.weather_code] || 'Conditions variables'}</div>
+                        <div class="weather-extra">
+                            <div class="weather-extra-item"><span>💧</span><span>${c.relative_humidity_2m}%</span></div>
+                            <div class="weather-extra-item"><span>💨</span><span>${Math.round(c.wind_speed_10m)} km/h</span></div>
+                        </div>
+                    </div>
+                </div>`;
+        } catch(e) {
+            document.getElementById('weatherContent').innerHTML = '<div class="empty-state">Impossible de charger la météo</div>';
+        }
+    }
+
+    // ========== INIT ==========
+
+    async function init() {
+        updateDateTime();
+        updateWeather();
+        await loadAll();
+        setupRealtime();
+        setInterval(updateDateTime, 1000);
+        setInterval(updateWeather, 10 * 60 * 1000);
+    }
+
+    document.readyState === 'loading'
+        ? document.addEventListener('DOMContentLoaded', init)
+        : init();
+})();
+</script>
 </body>
 </html>
